@@ -1,0 +1,1590 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='WolframCDFPlayer 10.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       163,          7]
+NotebookDataLength[     69809,       1581]
+NotebookOptionsPosition[     65600,       1452]
+NotebookOutlinePosition[     67208,       1503]
+CellTagsIndexPosition[     66880,       1491]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Weighted Voronoi Diagrams", "DemoTitle",
+ CellChangeTimes->{{3.678685041533915*^9, 3.678685050072521*^9}}],
+
+Cell["", "InitializationSection"],
+
+Cell[CellGroupData[{
+
+Cell["", "ManipulateSection"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"SeedRandom", "[", "\[Delta]", "]"}], ";", "\[IndentingNewLine]", 
+    RowBox[{"Quiet", "@", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+        "reg", ",", "sites", ",", "points", ",", "weights", ",", "labels", 
+         ",", "mf", ",", "nf"}], "}"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"(*", 
+        RowBox[{
+         RowBox[{"--", 
+          RowBox[{"--", 
+           RowBox[{"-", 
+            RowBox[{
+             RowBox[{"definitions", "--"}], "--"}]}]}]}], "-", 
+         RowBox[{"--", "-"}]}], "*)"}], "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{"reg", "=", 
+         RowBox[{"Rectangle", "[", 
+          RowBox[{
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"-", "1"}], ",", 
+             RowBox[{"-", "1"}]}], "}"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"1", ",", "1"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"sites", "=", 
+         RowBox[{"RandomPoint", "[", 
+          RowBox[{"reg", ",", "n"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"points", "=", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"PointSize", "[", ".015", "]"}], ",", 
+           RowBox[{"ParallelMap", "[", 
+            RowBox[{"Point", ",", "sites"}], "]"}]}], "}"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"weights", "=", 
+         RowBox[{"Round", "[", 
+          RowBox[{
+           RowBox[{"RandomReal", "[", 
+            RowBox[{"int", ",", "n"}], "]"}], ",", ".01"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"labels", "=", 
+         RowBox[{"ParallelTable", "[", 
+          RowBox[{
+           RowBox[{"Text", "[", 
+            RowBox[{
+             RowBox[{"ToString", "[", 
+              RowBox[{
+              "weights", "\[LeftDoubleBracket]", "i", 
+               "\[RightDoubleBracket]"}], "]"}], ",", 
+             RowBox[{
+              RowBox[{
+              "sites", "\[LeftDoubleBracket]", "i", "\[RightDoubleBracket]"}],
+               "+", 
+              RowBox[{"{", 
+               RowBox[{"0", ",", ".02"}], "}"}]}], ",", 
+             RowBox[{"{", 
+              RowBox[{"0", ",", 
+               RowBox[{"-", "1"}]}], "}"}], ",", 
+             RowBox[{"Background", "\[Rule]", "White"}]}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"i", ",", "1", ",", "n"}], "}"}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"mf", "=", 
+         RowBox[{"(*", "RegionMemberFunction", "*)"}], 
+         RowBox[{"RegionMember", "[", "reg", "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"nf", "=", 
+         RowBox[{"(*", "NearestFunction", "*)"}], 
+         RowBox[{"Nearest", "[", 
+          RowBox[{
+           RowBox[{"sites", "\[Rule]", "Automatic"}], ",", 
+           RowBox[{"DistanceFunction", "\[Rule]", 
+            RowBox[{"(", 
+             RowBox[{"Switch", "[", 
+              RowBox[{"type", ",", "0", ",", 
+               RowBox[{
+                RowBox[{"df", "[", 
+                 RowBox[{"#1", ",", "#2"}], "]"}], "&"}], ",", "1", ",", 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"-", 
+                   RowBox[{"weights", "\[LeftDoubleBracket]", 
+                    RowBox[{"First", "@", 
+                    RowBox[{"FirstPosition", "[", 
+                    RowBox[{"sites", ",", "#2"}], "]"}]}], 
+                    "\[RightDoubleBracket]"}]}], "+", 
+                  RowBox[{"df", "[", 
+                   RowBox[{"#1", ",", "#2"}], "]"}]}], "&"}], ")"}], ",", "2",
+                ",", 
+               RowBox[{"(", 
+                RowBox[{
+                 RowBox[{
+                  RowBox[{"weights", "\[LeftDoubleBracket]", 
+                   RowBox[{"First", "@", 
+                    RowBox[{"FirstPosition", "[", 
+                    RowBox[{"sites", ",", "#2"}], "]"}]}], 
+                   "\[RightDoubleBracket]"}], " ", "*", 
+                  RowBox[{"df", "[", 
+                   RowBox[{"#1", ",", "#2"}], "]"}]}], "&"}], ")"}]}], "]"}], 
+             ")"}]}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+          RowBox[{"--", 
+           RowBox[{"--", 
+            RowBox[{"-", 
+             RowBox[{
+              RowBox[{"result", "--"}], "--"}]}]}]}], "-", 
+          RowBox[{"--", "-"}]}], "*)"}], "\[IndentingNewLine]", 
+        RowBox[{"RegionPlot", "[", 
+         RowBox[{
+          RowBox[{"mf", "[", 
+           RowBox[{"{", 
+            RowBox[{"x", ",", "y"}], "}"}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"x", ",", 
+            RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"y", ",", 
+            RowBox[{"-", "1"}], ",", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"PlotRange", "\[Rule]", "1.02"}], ",", 
+          RowBox[{"PlotPoints", "\[Rule]", 
+           RowBox[{"ControlActive", "[", 
+            RowBox[{"15", ",", "75"}], "]"}]}], ",", 
+          RowBox[{"PerformanceGoal", "\[Rule]", "\"\<Speed\>\""}], ",", 
+          RowBox[{"BoundaryStyle", "\[Rule]", 
+           RowBox[{"Opacity", "[", "0", "]"}]}], ",", 
+          RowBox[{"MeshFunctions", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"First", "@", 
+              RowBox[{"nf", "[", 
+               RowBox[{"{", 
+                RowBox[{"#1", ",", "#2"}], "}"}], "]"}]}], "&"}], "}"}]}], 
+          ",", 
+          RowBox[{"MeshStyle", "\[Rule]", "Black"}], ",", 
+          RowBox[{"Mesh", "\[Rule]", 
+           RowBox[{"{", "n", "}"}]}], ",", 
+          RowBox[{"Background", "\[Rule]", 
+           RowBox[{"Darker", "[", 
+            RowBox[{"Gray", ",", ".25"}], "]"}]}], ",", 
+          RowBox[{"MeshShading", "\[Rule]", 
+           RowBox[{"(", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{"scheme", "===", "Hue"}], ",", 
+                RowBox[{"Hue", "[", "#", "]"}], ",", 
+                RowBox[{
+                 RowBox[{"ColorData", "[", "scheme", "]"}], "[", "#", "]"}]}],
+                "]"}], "&"}], "/@", 
+             RowBox[{"(", 
+              RowBox[{"Range", "[", 
+               RowBox[{"0.", ",", "1", ",", 
+                RowBox[{"1", "/", 
+                 RowBox[{"(", 
+                  RowBox[{"n", "+", "1"}], ")"}]}]}], "]"}], ")"}]}], ")"}]}],
+           ",", 
+          RowBox[{"Epilog", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"points", ",", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"type", "\[Equal]", "0"}], ",", 
+               RowBox[{"{", "}"}], ",", "labels"}], "]"}]}], "}"}]}], ",", 
+          RowBox[{"Frame", "\[Rule]", "False"}], ",", 
+          RowBox[{"Axes", "\[Rule]", "False"}], " ", ",", 
+          RowBox[{"ImageSize", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"400", ",", "400"}], "}"}]}]}], "]"}]}]}], "]"}]}]}], ",",
+    "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"--", 
+      RowBox[{"--", 
+       RowBox[{"-", 
+        RowBox[{
+         RowBox[{"controls", "--"}], "--"}]}]}]}], "-", 
+     RowBox[{"--", "-"}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<Sites\>\"", ",", "11", ",", "Bold"}], "]"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Row", "[", 
+    RowBox[{"{", 
+     RowBox[{"\"\<number\>\"", ",", 
+      RowBox[{"Control", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"n", ",", "6", ",", "\"\<\>\""}], "}"}], ",", 
+         RowBox[{"Range", "[", 
+          RowBox[{"2", ",", "10"}], "]"}]}], "}"}], "]"}], ",", 
+      RowBox[{"Spacer", "[", "15", "]"}], ",", "\[IndentingNewLine]", 
+      RowBox[{"Button", "[", 
+       RowBox[{"\"\<new set\>\"", ",", 
+        RowBox[{"\[Delta]", "=", 
+         RowBox[{"\[Delta]", "+", "1"}]}], 
+        RowBox[{"(*", 
+         RowBox[{"trigger", " ", "for", " ", "SeedRandom"}], "*)"}], ",", 
+        RowBox[{"Background", "\[Rule]", 
+         RowBox[{"Lighter", "[", 
+          RowBox[{"Gray", ",", " ", "0.5"}], "]"}]}]}], "]"}]}], "}"}], "]"}],
+    ",", "Delimiter", ",", "\[IndentingNewLine]", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<Weights\>\"", ",", "11", ",", "Bold"}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"int", ",", 
+       RowBox[{"{", 
+        RowBox[{".2", ",", ".75"}], "}"}], ",", "\"\<\>\""}], "}"}], ",", 
+     "0.01", ",", "1", ",", ".01", ",", " ", "IntervalSlider", ",", 
+     RowBox[{"Method", " ", "\[Rule]", " ", "\"\<Push\>\""}], ",", 
+     RowBox[{"MinIntervalSize", "\[Rule]", "0.001"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "170"}]}], "}"}], ",", 
+   RowBox[{"Dynamic", "@", 
+    RowBox[{"Item", "[", 
+     RowBox[{"\"\<weight limits: \>\"", "<>", 
+      RowBox[{"ToString", "[", "int", "]"}]}], "]"}]}], ",", 
+   "\[IndentingNewLine]", "\"\<\\nweighing scheme\>\"", ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"type", ",", "1", ",", "\"\<\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"0", "\[Rule]", "\"\<unweighted\>\""}], ",", 
+       RowBox[{"1", "\[Rule]", "\"\<additive\>\""}], ",", 
+       RowBox[{"2", "\[Rule]", "\"\<multiplicative\>\""}]}], "}"}]}], "}"}], 
+   ",", "Delimiter", ",", "\[IndentingNewLine]", 
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<Diagram\>\"", ",", "11", ",", "Bold"}], "]"}], ",", 
+   "\"\<distance function\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"df", ",", "EuclideanDistance", ",", "\"\<\>\""}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"{", 
+      RowBox[{
+      "EuclideanDistance", ",", "ManhattanDistance", ",", 
+       "ChessboardDistance"}], "}"}], ",", "PopupMenu"}], "}"}], ",", 
+   "Delimiter", ",", "\[IndentingNewLine]", "\"\<color scheme\>\"", ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"scheme", ",", "\"\<Rainbow\>\"", ",", "\"\<\>\""}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{
+      "Hue", ",", "\"\<Rainbow\>\"", ",", "\"\<DarkRainbow\>\"", ",", 
+       "\"\<TemperatureMap\>\"", ",", "\"\<ThermometerColors\>\"", ",", 
+       "\"\<CMYKColors\>\"", ",", "\"\<SunsetColors\>\"", ",", 
+       "\"\<GrayYellowTones\>\""}], "}"}], ",", "PopupMenu"}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"\[Delta]", ",", "123"}], "}"}], ",", "None"}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"--", 
+      RowBox[{"--", 
+       RowBox[{"-", 
+        RowBox[{
+         RowBox[{"options", "--"}], "--"}]}]}]}], "-", 
+     RowBox[{"--", "-"}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"AutorunSequencing", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"3", ",", "1", ",", "4", ",", "5"}], "}"}]}], ",", 
+   RowBox[{"ControlPlacement", "\[Rule]", "Left"}], ",", 
+   RowBox[{"SynchronousUpdating", "\[Rule]", "False"}]}], "]"}]], "Input",
+ CellChangeTimes->{
+  3.678685057121641*^9, {3.678685119384636*^9, 3.678685133527225*^9}, 
+   3.678685168034397*^9, {3.678685249334016*^9, 3.678685272531374*^9}, {
+   3.678685313133906*^9, 3.678685356548308*^9}, {3.6786854301126204`*^9, 
+   3.6786855839438963`*^9}, {3.678686784170752*^9, 3.678686794901577*^9}, {
+   3.678686896940784*^9, 3.678686932186941*^9}, {3.678686965576684*^9, 
+   3.678686991947424*^9}, {3.678687024987619*^9, 3.678687097698038*^9}, {
+   3.678687156299067*^9, 3.678687216573411*^9}, 3.678687264999995*^9, 
+   3.678687329126472*^9, {3.678687476884605*^9, 3.678687650738345*^9}, {
+   3.678687694231988*^9, 3.6786877305517597`*^9}, {3.678687870008079*^9, 
+   3.678687870336429*^9}, {3.678688083172483*^9, 3.678688083390461*^9}, {
+   3.678688142658619*^9, 3.678688144860404*^9}, {3.67868817732539*^9, 
+   3.678688177487728*^9}, {3.678688416114744*^9, 3.678688439795557*^9}, {
+   3.678688480204781*^9, 3.678688489182097*^9}, {3.6786926515265617`*^9, 
+   3.678692734407638*^9}, {3.6786954779651937`*^9, 3.678695490715405*^9}, {
+   3.678708907507321*^9, 3.678708940328104*^9}, {3.6787090266235313`*^9, 
+   3.678709116856327*^9}, {3.678709203012916*^9, 3.678709252178273*^9}, {
+   3.67871959269525*^9, 3.67871966647314*^9}, {3.678719706387377*^9, 
+   3.678719766041316*^9}, {3.678719803542665*^9, 3.678719813656745*^9}, {
+   3.6787198556305733`*^9, 3.6787198674997187`*^9}, {3.678719901125813*^9, 
+   3.678719964745021*^9}, 3.678719995110441*^9, {3.678720034962438*^9, 
+   3.6787200529991693`*^9}, {3.6787202766806307`*^9, 
+   3.6787203317340097`*^9}, {3.6787203658889217`*^9, 3.678720400798711*^9}, 
+   3.6787204332097397`*^9, {3.678720571643126*^9, 3.678720587110819*^9}, {
+   3.6787206173160677`*^9, 3.67872065349645*^9}, {3.678720718815795*^9, 
+   3.678720722589093*^9}, {3.6787207571877737`*^9, 3.6787209065439*^9}, {
+   3.6787209457389803`*^9, 3.678720948214984*^9}, {3.678795134853279*^9, 
+   3.6787951737668858`*^9}, {3.6787952569623213`*^9, 
+   3.6787953416853943`*^9}, {3.678795372893188*^9, 3.6787953909384403`*^9}, {
+   3.678809250078727*^9, 3.678809250651045*^9}, {3.678809283966044*^9, 
+   3.678809293516205*^9}, {3.678809323900885*^9, 3.67880940093017*^9}, {
+   3.678809439993101*^9, 3.678809480085998*^9}, {3.6788095279683237`*^9, 
+   3.678809601046589*^9}, {3.679399178608922*^9, 3.679399184257196*^9}, 
+   3.6800043753707314`*^9, {3.6803461952895947`*^9, 3.680346218111795*^9}, {
+   3.6803493514817753`*^9, 3.68034939260076*^9}}],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`df$$ = 
+    EuclideanDistance, $CellContext`int$$ = {0.2, 0.75}, $CellContext`n$$ = 
+    6, $CellContext`scheme$$ = "Rainbow", $CellContext`type$$ = 
+    1, $CellContext`\[Delta]$$ = 123, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[
+       Style["Sites", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`n$$], 6, ""}, {2, 3, 4, 5, 6, 7, 8, 9, 10}}, {
+      Hold[
+       Row[{"number", 
+         Manipulate`Place[1], 
+         Spacer[15], 
+         Button[
+         "new set", $CellContext`\[Delta]$$ = $CellContext`\[Delta]$$ + 1, 
+          Background -> RGBColor[0.75, 0.75, 0.75]]}]], 
+      Manipulate`Dump`ThisIsNotAControl}, {
+      Hold[
+       Style["Weights", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`int$$], {0.2, 0.75}, ""}, 0.01, 1, 0.01}, {
+      Hold[
+       Dynamic[
+        Item[
+         StringJoin["weight limits: ", 
+          ToString[$CellContext`int$$]]]]], 
+      Manipulate`Dump`ThisIsNotAControl}, {
+      Hold["\nweighing scheme"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`type$$], 1, ""}, {
+      0 -> "unweighted", 1 -> "additive", 2 -> "multiplicative"}}, {
+      Hold[
+       Style["Diagram", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {
+      Hold["distance function"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`df$$], EuclideanDistance, ""}, {
+      EuclideanDistance, ManhattanDistance, ChessboardDistance}}, {
+      Hold["color scheme"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`scheme$$], "Rainbow", ""}, {
+      Hue, "Rainbow", "DarkRainbow", "TemperatureMap", "ThermometerColors", 
+       "CMYKColors", "SunsetColors", "GrayYellowTones"}}, {{
+       Hold[$CellContext`\[Delta]$$], 123}, 0}}, Typeset`size$$ = {
+    400., {198., 202.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`n$3225$$ = 
+    0, $CellContext`int$3226$$ = 0, $CellContext`type$3227$$ = 
+    False, $CellContext`df$3228$$ = 0, $CellContext`scheme$3229$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     3, StandardForm, 
+      "Variables" :> {$CellContext`df$$ = 
+        EuclideanDistance, $CellContext`int$$ = {0.2, 0.75}, $CellContext`n$$ = 
+        6, $CellContext`scheme$$ = "Rainbow", $CellContext`type$$ = 
+        1, $CellContext`\[Delta]$$ = 123}, "ControllerVariables" :> {
+        Hold[$CellContext`n$$, $CellContext`n$3225$$, 0], 
+        Hold[$CellContext`int$$, $CellContext`int$3226$$, 0], 
+        Hold[$CellContext`type$$, $CellContext`type$3227$$, False], 
+        Hold[$CellContext`df$$, $CellContext`df$3228$$, 0], 
+        Hold[$CellContext`scheme$$, $CellContext`scheme$3229$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> (SeedRandom[$CellContext`\[Delta]$$]; Quiet[
+         Module[{$CellContext`reg$, $CellContext`sites$, \
+$CellContext`points$, $CellContext`weights$, $CellContext`labels$, \
+$CellContext`mf$, $CellContext`nf$}, $CellContext`reg$ = 
+           Rectangle[{-1, -1}, {1, 1}]; $CellContext`sites$ = 
+           RandomPoint[$CellContext`reg$, $CellContext`n$$]; \
+$CellContext`points$ = {
+             PointSize[0.015], 
+             ParallelMap[Point, $CellContext`sites$]}; $CellContext`weights$ = 
+           Round[
+             RandomReal[$CellContext`int$$, $CellContext`n$$], 
+             0.01]; $CellContext`labels$ = ParallelTable[
+             Text[
+              ToString[
+               Part[$CellContext`weights$, $CellContext`i]], 
+              Part[$CellContext`sites$, $CellContext`i] + {0, 0.02}, {0, -1}, 
+              Background -> White], {$CellContext`i, 
+              1, $CellContext`n$$}]; $CellContext`mf$ = 
+           RegionMember[$CellContext`reg$]; $CellContext`nf$ = 
+           Nearest[$CellContext`sites$ -> Automatic, DistanceFunction -> 
+             Switch[$CellContext`type$$, 0, $CellContext`df$$[#, #2]& , 
+               1, -Part[$CellContext`weights$, 
+                  First[
+                   
+                   FirstPosition[$CellContext`sites$, #2]]] + \
+$CellContext`df$$[#, #2]& , 2, Part[$CellContext`weights$, 
+                 First[
+                  
+                  FirstPosition[$CellContext`sites$, #2]]] \
+$CellContext`df$$[#, #2]& ]]; RegionPlot[
+            $CellContext`mf$[{$CellContext`x, $CellContext`y}], \
+{$CellContext`x, -1, 1}, {$CellContext`y, -1, 1}, PlotRange -> 1.02, 
+            PlotPoints -> ControlActive[15, 75], PerformanceGoal -> "Speed", 
+            BoundaryStyle -> Opacity[0], MeshFunctions -> {First[
+               $CellContext`nf$[{#, #2}]]& }, MeshStyle -> Black, 
+            Mesh -> {$CellContext`n$$}, Background -> Darker[Gray, 0.25], 
+            MeshShading -> Map[If[$CellContext`scheme$$ === Hue, 
+               Hue[#], 
+               ColorData[$CellContext`scheme$$][#]]& , 
+              Range[0., 1, 1/($CellContext`n$$ + 1)]], 
+            Epilog -> {$CellContext`points$, 
+              If[$CellContext`type$$ == 0, {}, $CellContext`labels$]}, Frame -> 
+            False, Axes -> False, ImageSize -> {400, 400}]]]), 
+      "Specifications" :> {
+        Style[
+        "Sites", 11, Bold], {{$CellContext`n$$, 6, ""}, {2, 3, 4, 5, 6, 7, 8, 
+         9, 10}, ControlPlacement -> 1}, 
+        Row[{"number", 
+          Manipulate`Place[1], 
+          Spacer[15], 
+          Button[
+          "new set", $CellContext`\[Delta]$$ = $CellContext`\[Delta]$$ + 1, 
+           Background -> RGBColor[0.75, 0.75, 0.75]]}], Delimiter, 
+        Style[
+        "Weights", 11, Bold], {{$CellContext`int$$, {0.2, 0.75}, ""}, 0.01, 1,
+          0.01, ControlType -> IntervalSlider, Method -> "Push", 
+         MinIntervalSize -> 0.001, ImageSize -> 170}, 
+        Dynamic[
+         Item[
+          StringJoin["weight limits: ", 
+           ToString[$CellContext`int$$]]]], 
+        "\nweighing scheme", {{$CellContext`type$$, 1, ""}, {
+         0 -> "unweighted", 1 -> "additive", 2 -> "multiplicative"}}, 
+        Delimiter, 
+        Style["Diagram", 11, Bold], 
+        "distance function", {{$CellContext`df$$, EuclideanDistance, ""}, {
+         EuclideanDistance, ManhattanDistance, ChessboardDistance}, 
+         ControlType -> PopupMenu}, Delimiter, 
+        "color scheme", {{$CellContext`scheme$$, "Rainbow", ""}, {
+         Hue, "Rainbow", "DarkRainbow", "TemperatureMap", "ThermometerColors",
+           "CMYKColors", "SunsetColors", "GrayYellowTones"}, ControlType -> 
+         PopupMenu}, {{$CellContext`\[Delta]$$, 123}, 0, ControlType -> 
+         None}}, "Options" :> {
+       AutorunSequencing -> {3, 1, 4, 5}, ControlPlacement -> Left, 
+        SynchronousUpdating -> False}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{629., {224., 230.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->592904647]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "ManipulateCaptionSection"],
+
+Cell["\<\
+This Demonstration compares a simple Voronoi diagram with two common types of \
+weighted Voronoi diagrams: additive and multiplicative.\
+\>", "ManipulateCaption",
+ CellChangeTimes->{
+  3.679398405547801*^9, 3.680004240616012*^9, {3.6803465855754833`*^9, 
+   3.68034658610373*^9}, {3.6803492230503073`*^9, 3.680349225552246*^9}},
+ CellID->1333102113],
+
+Cell["\<\
+In a simple Voronoi diagram, the Voronoi cell of a site is the set of all \
+points that are closer to that site than to any other site using a distance \
+function (Euclidean, Manhattan, chessboard, \[Ellipsis]) to measure \
+\"closeness\".\
+\>", "ManipulateCaption",
+ CellChangeTimes->{{3.679397570344426*^9, 3.6793975939118967`*^9}, {
+   3.6793976360765047`*^9, 3.679397647328484*^9}, {3.679397706480529*^9, 
+   3.679397857444191*^9}, {3.679397917993719*^9, 3.6793980365354843`*^9}, {
+   3.679980990440247*^9, 3.679980991407563*^9}, 3.679981619870248*^9, {
+   3.67998165970634*^9, 3.6799816772797937`*^9}, {3.679981738309882*^9, 
+   3.679981790757762*^9}, {3.680346286323464*^9, 3.680346349393421*^9}},
+ CellID->1866972353],
+
+Cell["\<\
+A weighted Voronoi diagram uses some combination of distance and a weight \
+associated with each site.\
+\>", "ManipulateCaption",
+ CellChangeTimes->{{3.679397570344426*^9, 3.6793975939118967`*^9}, {
+   3.6793976360765047`*^9, 3.679397647328484*^9}, {3.679397706480529*^9, 
+   3.679397857444191*^9}, {3.679397917993719*^9, 3.6793980365354843`*^9}, {
+   3.679980990440247*^9, 3.679980991407563*^9}, 3.679981619870248*^9, {
+   3.67998165970634*^9, 3.6799816772797937`*^9}, {3.679981738309882*^9, 
+   3.679981790757762*^9}, {3.680346286323464*^9, 3.680346388542572*^9}},
+ CellID->2125056437],
+
+Cell["\<\
+In an additive Voronoi diagram, the weight is subtracted from the distance. \
+This produces hyperbolas as boundaries for the cells, as opposed to line \
+segments in the unweighted case. \
+\>", "ManipulateCaption",
+ CellChangeTimes->{{3.679397570344426*^9, 3.6793975939118967`*^9}, {
+   3.6793976360765047`*^9, 3.679397647326559*^9}, {3.679398199918528*^9, 
+   3.6793982771840067`*^9}, {3.679398471742422*^9, 3.6793986996922903`*^9}, {
+   3.679398731320133*^9, 3.679398863874818*^9}, 3.679398899912201*^9, {
+   3.679399121885055*^9, 3.679399126057695*^9}, {3.6799818044149933`*^9, 
+   3.679981810214943*^9}, {3.680346408265239*^9, 3.6803464983956203`*^9}},
+ CellID->2109037058],
+
+Cell["\<\
+In a multiplicative Voronoi diagram, the distance is multiplied by the \
+associated weight, which gives circular arcs as the boundaries of the cells.\
+\>", "ManipulateCaption",
+ CellChangeTimes->{{3.679397570344426*^9, 3.6793975939118967`*^9}, {
+   3.6793976360765047`*^9, 3.679397647326559*^9}, {3.679398199918528*^9, 
+   3.6793982771840067`*^9}, {3.679398471742422*^9, 3.6793986996922903`*^9}, {
+   3.679398731320133*^9, 3.679398863874818*^9}, 3.679398899912201*^9, {
+   3.679399121885055*^9, 3.679399126057695*^9}, 3.6799818044149933`*^9, {
+   3.6799819009983463`*^9, 3.67998191490802*^9}, {3.680346511554446*^9, 
+   3.680346531761512*^9}},
+ CellID->1058414107],
+
+Cell["\<\
+If all the sites have equal weights, both the additive and multiplicative \
+Voronoi diagrams reduce to the unweighted case.\
+\>", "ManipulateCaption",
+ CellChangeTimes->{{3.679397570344426*^9, 3.6793975939118967`*^9}, {
+   3.6793976360765047`*^9, 3.679397647326559*^9}, {3.679398199918528*^9, 
+   3.6793982771840067`*^9}, {3.679398471742422*^9, 3.6793986996922903`*^9}, {
+   3.679398731320133*^9, 3.679398863874818*^9}, 3.679398899912201*^9, {
+   3.679399121885055*^9, 3.679399126057695*^9}, 3.6799818044149933`*^9, {
+   3.679981939933049*^9, 3.679981959182014*^9}, {3.68034654019317*^9, 
+   3.6803465598805428`*^9}, {3.6803610022957973`*^9, 3.680361040941771*^9}},
+ CellID->720488007],
+
+Cell["\<\
+In this Demonstration, both a site's position and associated weight are \
+random. You can set the range of the weights with an interval slider. The \
+weight is indicated by a label close to the position of the site in the cell.\
+\>", "ManipulateCaption",
+ CellChangeTimes->{{3.6793992079090853`*^9, 3.6793992882157717`*^9}, {
+  3.67939934388113*^9, 3.679399385945265*^9}, {3.6799819864182873`*^9, 
+  3.679982004857101*^9}, {3.680346575079961*^9, 3.680346577567709*^9}, {
+  3.680346630477973*^9, 3.680346661780962*^9}},
+ CellID->23125692]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "ThumbnailSection"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`df$$ = 
+    EuclideanDistance, $CellContext`int$$ = {0.2, 0.89}, $CellContext`n$$ = 
+    10, $CellContext`scheme$$ = "Rainbow", $CellContext`type$$ = 
+    1, $CellContext`\[Delta]$$ = 123, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[
+       Style["Sites", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`n$$], 10, ""}, {2, 3, 4, 5, 6, 7, 8, 9, 10}}, {
+      Hold[
+       Row[{"number", 
+         Manipulate`Place[1], 
+         Spacer[15], 
+         Button[
+         "new set", $CellContext`\[Delta]$$ = $CellContext`\[Delta]$$ + 1, 
+          Background -> RGBColor[0.75, 0.75, 0.75]]}]], 
+      Manipulate`Dump`ThisIsNotAControl}, {
+      Hold[
+       Style["Weights", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`int$$], {0.2, 0.89}, ""}, 0.01, 1, 0.01}, {
+      Hold[
+       Dynamic[
+        Item[
+         StringJoin["weight limits: ", 
+          ToString[$CellContext`int$$]]]]], 
+      Manipulate`Dump`ThisIsNotAControl}, {
+      Hold["\nweighing scheme"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`type$$], 1, ""}, {
+      0 -> "unweighted", 1 -> "additive", 2 -> "multiplicative"}}, {
+      Hold[
+       Style["Diagram", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {
+      Hold["distance function"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`df$$], EuclideanDistance, ""}, {
+      EuclideanDistance, ManhattanDistance, ChessboardDistance}}, {
+      Hold["color scheme"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`scheme$$], "Rainbow", ""}, {
+      Hue, "Rainbow", "DarkRainbow", "TemperatureMap", "ThermometerColors", 
+       "CMYKColors", "SunsetColors", "GrayYellowTones"}}, {{
+       Hold[$CellContext`\[Delta]$$], 123}, 0}}, Typeset`size$$ = {
+    400., {198., 202.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`n$3309$$ = 
+    0, $CellContext`int$3310$$ = 0, $CellContext`type$3311$$ = 
+    False, $CellContext`df$3312$$ = 0, $CellContext`scheme$3313$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     3, StandardForm, 
+      "Variables" :> {$CellContext`df$$ = 
+        EuclideanDistance, $CellContext`int$$ = {0.2, 0.89}, $CellContext`n$$ = 
+        10, $CellContext`scheme$$ = "Rainbow", $CellContext`type$$ = 
+        1, $CellContext`\[Delta]$$ = 123}, "ControllerVariables" :> {
+        Hold[$CellContext`n$$, $CellContext`n$3309$$, 0], 
+        Hold[$CellContext`int$$, $CellContext`int$3310$$, 0], 
+        Hold[$CellContext`type$$, $CellContext`type$3311$$, False], 
+        Hold[$CellContext`df$$, $CellContext`df$3312$$, 0], 
+        Hold[$CellContext`scheme$$, $CellContext`scheme$3313$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> (SeedRandom[$CellContext`\[Delta]$$]; Quiet[
+         Module[{$CellContext`reg$, $CellContext`sites$, \
+$CellContext`points$, $CellContext`weights$, $CellContext`labels$, \
+$CellContext`mf$, $CellContext`nf$}, $CellContext`reg$ = 
+           Rectangle[{-1, -1}, {1, 1}]; $CellContext`sites$ = 
+           RandomPoint[$CellContext`reg$, $CellContext`n$$]; \
+$CellContext`points$ = {
+             PointSize[0.015], 
+             ParallelMap[Point, $CellContext`sites$]}; $CellContext`weights$ = 
+           Round[
+             RandomReal[$CellContext`int$$, $CellContext`n$$], 
+             0.01]; $CellContext`labels$ = ParallelTable[
+             Text[
+              ToString[
+               Part[$CellContext`weights$, $CellContext`i]], 
+              Part[$CellContext`sites$, $CellContext`i] + {0, 0.02}, {0, -1}, 
+              Background -> White], {$CellContext`i, 
+              1, $CellContext`n$$}]; $CellContext`mf$ = 
+           RegionMember[$CellContext`reg$]; $CellContext`nf$ = 
+           Nearest[$CellContext`sites$ -> Automatic, DistanceFunction -> 
+             Switch[$CellContext`type$$, 0, $CellContext`df$$[#, #2]& , 
+               1, -Part[$CellContext`weights$, 
+                  First[
+                   
+                   FirstPosition[$CellContext`sites$, #2]]] + \
+$CellContext`df$$[#, #2]& , 2, Part[$CellContext`weights$, 
+                 First[
+                  
+                  FirstPosition[$CellContext`sites$, #2]]] \
+$CellContext`df$$[#, #2]& ]]; RegionPlot[
+            $CellContext`mf$[{$CellContext`x, $CellContext`y}], \
+{$CellContext`x, -1, 1}, {$CellContext`y, -1, 1}, PlotRange -> 1.02, 
+            PlotPoints -> ControlActive[15, 75], PerformanceGoal -> "Speed", 
+            BoundaryStyle -> Opacity[0], MeshFunctions -> {First[
+               $CellContext`nf$[{#, #2}]]& }, MeshStyle -> Black, 
+            Mesh -> {$CellContext`n$$}, Background -> Darker[Gray, 0.25], 
+            MeshShading -> Map[If[$CellContext`scheme$$ === Hue, 
+               Hue[#], 
+               ColorData[$CellContext`scheme$$][#]]& , 
+              Range[0., 1, 1/($CellContext`n$$ + 1)]], 
+            Epilog -> {$CellContext`points$, 
+              If[$CellContext`type$$ == 0, {}, $CellContext`labels$]}, Frame -> 
+            False, Axes -> False, ImageSize -> {400, 400}]]]), 
+      "Specifications" :> {
+        Style[
+        "Sites", 11, Bold], {{$CellContext`n$$, 10, ""}, {2, 3, 4, 5, 6, 7, 8,
+          9, 10}, ControlPlacement -> 1}, 
+        Row[{"number", 
+          Manipulate`Place[1], 
+          Spacer[15], 
+          Button[
+          "new set", $CellContext`\[Delta]$$ = $CellContext`\[Delta]$$ + 1, 
+           Background -> RGBColor[0.75, 0.75, 0.75]]}], Delimiter, 
+        Style[
+        "Weights", 11, Bold], {{$CellContext`int$$, {0.2, 0.89}, ""}, 0.01, 1,
+          0.01, ControlType -> IntervalSlider, Method -> "Push", 
+         MinIntervalSize -> 0.001, ImageSize -> 170}, 
+        Dynamic[
+         Item[
+          StringJoin["weight limits: ", 
+           ToString[$CellContext`int$$]]]], 
+        "\nweighing scheme", {{$CellContext`type$$, 1, ""}, {
+         0 -> "unweighted", 1 -> "additive", 2 -> "multiplicative"}}, 
+        Delimiter, 
+        Style["Diagram", 11, Bold], 
+        "distance function", {{$CellContext`df$$, EuclideanDistance, ""}, {
+         EuclideanDistance, ManhattanDistance, ChessboardDistance}, 
+         ControlType -> PopupMenu}, Delimiter, 
+        "color scheme", {{$CellContext`scheme$$, "Rainbow", ""}, {
+         Hue, "Rainbow", "DarkRainbow", "TemperatureMap", "ThermometerColors",
+           "CMYKColors", "SunsetColors", "GrayYellowTones"}, ControlType -> 
+         PopupMenu}, {{$CellContext`\[Delta]$$, 123}, 0, ControlType -> 
+         None}}, "Options" :> {
+       AutorunSequencing -> {3, 1, 4, 5}, ControlPlacement -> Left, 
+        SynchronousUpdating -> False}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{629., {224., 230.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->624280049]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "SnapshotsSection"],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`df$$ = 
+    EuclideanDistance, $CellContext`int$$ = {0.2, 0.75}, $CellContext`n$$ = 
+    8, $CellContext`scheme$$ = Hue, $CellContext`type$$ = 
+    2, $CellContext`\[Delta]$$ = 123, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[
+       Style["Sites", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`n$$], 8, ""}, {2, 3, 4, 5, 6, 7, 8, 9, 10}}, {
+      Hold[
+       Row[{"number", 
+         Manipulate`Place[1], 
+         Spacer[15], 
+         Button[
+         "new set", $CellContext`\[Delta]$$ = $CellContext`\[Delta]$$ + 1, 
+          Background -> RGBColor[0.75, 0.75, 0.75]]}]], 
+      Manipulate`Dump`ThisIsNotAControl}, {
+      Hold[
+       Style["Weights", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`int$$], {0.2, 0.75}, ""}, 0.01, 1, 0.01}, {
+      Hold[
+       Dynamic[
+        Item[
+         StringJoin["weight limits: ", 
+          ToString[$CellContext`int$$]]]]], 
+      Manipulate`Dump`ThisIsNotAControl}, {
+      Hold["\nweighing scheme"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`type$$], 2, ""}, {
+      0 -> "unweighted", 1 -> "additive", 2 -> "multiplicative"}}, {
+      Hold[
+       Style["Diagram", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {
+      Hold["distance function"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`df$$], EuclideanDistance, ""}, {
+      EuclideanDistance, ManhattanDistance, ChessboardDistance}}, {
+      Hold["color scheme"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`scheme$$], Hue, ""}, {
+      Hue, "Rainbow", "DarkRainbow", "TemperatureMap", "ThermometerColors", 
+       "CMYKColors", "SunsetColors", "GrayYellowTones"}}, {{
+       Hold[$CellContext`\[Delta]$$], 123}, 0}}, Typeset`size$$ = {
+    400., {198., 202.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`n$3388$$ = 
+    0, $CellContext`int$3389$$ = 0, $CellContext`type$3390$$ = 
+    False, $CellContext`df$3391$$ = 0, $CellContext`scheme$3392$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     3, StandardForm, 
+      "Variables" :> {$CellContext`df$$ = 
+        EuclideanDistance, $CellContext`int$$ = {0.2, 0.75}, $CellContext`n$$ = 
+        8, $CellContext`scheme$$ = Hue, $CellContext`type$$ = 
+        2, $CellContext`\[Delta]$$ = 123}, "ControllerVariables" :> {
+        Hold[$CellContext`n$$, $CellContext`n$3388$$, 0], 
+        Hold[$CellContext`int$$, $CellContext`int$3389$$, 0], 
+        Hold[$CellContext`type$$, $CellContext`type$3390$$, False], 
+        Hold[$CellContext`df$$, $CellContext`df$3391$$, 0], 
+        Hold[$CellContext`scheme$$, $CellContext`scheme$3392$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> (SeedRandom[$CellContext`\[Delta]$$]; Quiet[
+         Module[{$CellContext`reg$, $CellContext`sites$, \
+$CellContext`points$, $CellContext`weights$, $CellContext`labels$, \
+$CellContext`mf$, $CellContext`nf$}, $CellContext`reg$ = 
+           Rectangle[{-1, -1}, {1, 1}]; $CellContext`sites$ = 
+           RandomPoint[$CellContext`reg$, $CellContext`n$$]; \
+$CellContext`points$ = {
+             PointSize[0.015], 
+             ParallelMap[Point, $CellContext`sites$]}; $CellContext`weights$ = 
+           Round[
+             RandomReal[$CellContext`int$$, $CellContext`n$$], 
+             0.01]; $CellContext`labels$ = ParallelTable[
+             Text[
+              ToString[
+               Part[$CellContext`weights$, $CellContext`i]], 
+              Part[$CellContext`sites$, $CellContext`i] + {0, 0.02}, {0, -1}, 
+              Background -> White], {$CellContext`i, 
+              1, $CellContext`n$$}]; $CellContext`mf$ = 
+           RegionMember[$CellContext`reg$]; $CellContext`nf$ = 
+           Nearest[$CellContext`sites$ -> Automatic, DistanceFunction -> 
+             Switch[$CellContext`type$$, 0, $CellContext`df$$[#, #2]& , 
+               1, -Part[$CellContext`weights$, 
+                  First[
+                   
+                   FirstPosition[$CellContext`sites$, #2]]] + \
+$CellContext`df$$[#, #2]& , 2, Part[$CellContext`weights$, 
+                 First[
+                  
+                  FirstPosition[$CellContext`sites$, #2]]] \
+$CellContext`df$$[#, #2]& ]]; RegionPlot[
+            $CellContext`mf$[{$CellContext`x, $CellContext`y}], \
+{$CellContext`x, -1, 1}, {$CellContext`y, -1, 1}, PlotRange -> 1.02, 
+            PlotPoints -> ControlActive[15, 75], PerformanceGoal -> "Speed", 
+            BoundaryStyle -> Opacity[0], MeshFunctions -> {First[
+               $CellContext`nf$[{#, #2}]]& }, MeshStyle -> Black, 
+            Mesh -> {$CellContext`n$$}, Background -> Darker[Gray, 0.25], 
+            MeshShading -> Map[If[$CellContext`scheme$$ === Hue, 
+               Hue[#], 
+               ColorData[$CellContext`scheme$$][#]]& , 
+              Range[0., 1, 1/($CellContext`n$$ + 1)]], 
+            Epilog -> {$CellContext`points$, 
+              If[$CellContext`type$$ == 0, {}, $CellContext`labels$]}, Frame -> 
+            False, Axes -> False, ImageSize -> {400, 400}]]]), 
+      "Specifications" :> {
+        Style[
+        "Sites", 11, Bold], {{$CellContext`n$$, 8, ""}, {2, 3, 4, 5, 6, 7, 8, 
+         9, 10}, ControlPlacement -> 1}, 
+        Row[{"number", 
+          Manipulate`Place[1], 
+          Spacer[15], 
+          Button[
+          "new set", $CellContext`\[Delta]$$ = $CellContext`\[Delta]$$ + 1, 
+           Background -> RGBColor[0.75, 0.75, 0.75]]}], Delimiter, 
+        Style[
+        "Weights", 11, Bold], {{$CellContext`int$$, {0.2, 0.75}, ""}, 0.01, 1,
+          0.01, ControlType -> IntervalSlider, Method -> "Push", 
+         MinIntervalSize -> 0.001, ImageSize -> 170}, 
+        Dynamic[
+         Item[
+          StringJoin["weight limits: ", 
+           ToString[$CellContext`int$$]]]], 
+        "\nweighing scheme", {{$CellContext`type$$, 2, ""}, {
+         0 -> "unweighted", 1 -> "additive", 2 -> "multiplicative"}}, 
+        Delimiter, 
+        Style["Diagram", 11, Bold], 
+        "distance function", {{$CellContext`df$$, EuclideanDistance, ""}, {
+         EuclideanDistance, ManhattanDistance, ChessboardDistance}, 
+         ControlType -> PopupMenu}, Delimiter, 
+        "color scheme", {{$CellContext`scheme$$, Hue, ""}, {
+         Hue, "Rainbow", "DarkRainbow", "TemperatureMap", "ThermometerColors",
+           "CMYKColors", "SunsetColors", "GrayYellowTones"}, ControlType -> 
+         PopupMenu}, {{$CellContext`\[Delta]$$, 123}, 0, ControlType -> 
+         None}}, "Options" :> {
+       AutorunSequencing -> {3, 1, 4, 5}, ControlPlacement -> Left, 
+        SynchronousUpdating -> False}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{629., {224., 230.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->1817167948],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`df$$ = 
+    ManhattanDistance, $CellContext`int$$ = {0.2, 0.75}, $CellContext`n$$ = 
+    6, $CellContext`scheme$$ = "SunsetColors", $CellContext`type$$ = 
+    1, $CellContext`\[Delta]$$ = 123, Typeset`show$$ = True, 
+    Typeset`bookmarkList$$ = {}, Typeset`bookmarkMode$$ = "Menu", 
+    Typeset`animator$$, Typeset`animvar$$ = 1, Typeset`name$$ = 
+    "\"untitled\"", Typeset`specs$$ = {{
+      Hold[
+       Style["Sites", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`n$$], 6, ""}, {2, 3, 4, 5, 6, 7, 8, 9, 10}}, {
+      Hold[
+       Row[{"number", 
+         Manipulate`Place[1], 
+         Spacer[15], 
+         Button[
+         "new set", $CellContext`\[Delta]$$ = $CellContext`\[Delta]$$ + 1, 
+          Background -> RGBColor[0.75, 0.75, 0.75]]}]], 
+      Manipulate`Dump`ThisIsNotAControl}, {
+      Hold[
+       Style["Weights", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`int$$], {0.2, 0.75}, ""}, 0.01, 1, 0.01}, {
+      Hold[
+       Dynamic[
+        Item[
+         StringJoin["weight limits: ", 
+          ToString[$CellContext`int$$]]]]], 
+      Manipulate`Dump`ThisIsNotAControl}, {
+      Hold["\nweighing scheme"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`type$$], 1, ""}, {
+      0 -> "unweighted", 1 -> "additive", 2 -> "multiplicative"}}, {
+      Hold[
+       Style["Diagram", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {
+      Hold["distance function"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`df$$], ManhattanDistance, ""}, {
+      EuclideanDistance, ManhattanDistance, ChessboardDistance}}, {
+      Hold["color scheme"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`scheme$$], "SunsetColors", ""}, {
+      Hue, "Rainbow", "DarkRainbow", "TemperatureMap", "ThermometerColors", 
+       "CMYKColors", "SunsetColors", "GrayYellowTones"}}, {{
+       Hold[$CellContext`\[Delta]$$], 123}, 0}}, Typeset`size$$ = {
+    400., {198., 202.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`n$3467$$ = 
+    0, $CellContext`int$3468$$ = 0, $CellContext`type$3469$$ = 
+    False, $CellContext`df$3470$$ = 0, $CellContext`scheme$3471$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     3, StandardForm, 
+      "Variables" :> {$CellContext`df$$ = 
+        ManhattanDistance, $CellContext`int$$ = {0.2, 0.75}, $CellContext`n$$ = 
+        6, $CellContext`scheme$$ = "SunsetColors", $CellContext`type$$ = 
+        1, $CellContext`\[Delta]$$ = 123}, "ControllerVariables" :> {
+        Hold[$CellContext`n$$, $CellContext`n$3467$$, 0], 
+        Hold[$CellContext`int$$, $CellContext`int$3468$$, 0], 
+        Hold[$CellContext`type$$, $CellContext`type$3469$$, False], 
+        Hold[$CellContext`df$$, $CellContext`df$3470$$, 0], 
+        Hold[$CellContext`scheme$$, $CellContext`scheme$3471$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> (SeedRandom[$CellContext`\[Delta]$$]; Quiet[
+         Module[{$CellContext`reg$, $CellContext`sites$, \
+$CellContext`points$, $CellContext`weights$, $CellContext`labels$, \
+$CellContext`mf$, $CellContext`nf$}, $CellContext`reg$ = 
+           Rectangle[{-1, -1}, {1, 1}]; $CellContext`sites$ = 
+           RandomPoint[$CellContext`reg$, $CellContext`n$$]; \
+$CellContext`points$ = {
+             PointSize[0.015], 
+             ParallelMap[Point, $CellContext`sites$]}; $CellContext`weights$ = 
+           Round[
+             RandomReal[$CellContext`int$$, $CellContext`n$$], 
+             0.01]; $CellContext`labels$ = ParallelTable[
+             Text[
+              ToString[
+               Part[$CellContext`weights$, $CellContext`i]], 
+              Part[$CellContext`sites$, $CellContext`i] + {0, 0.02}, {0, -1}, 
+              Background -> White], {$CellContext`i, 
+              1, $CellContext`n$$}]; $CellContext`mf$ = 
+           RegionMember[$CellContext`reg$]; $CellContext`nf$ = 
+           Nearest[$CellContext`sites$ -> Automatic, DistanceFunction -> 
+             Switch[$CellContext`type$$, 0, $CellContext`df$$[#, #2]& , 
+               1, -Part[$CellContext`weights$, 
+                  First[
+                   
+                   FirstPosition[$CellContext`sites$, #2]]] + \
+$CellContext`df$$[#, #2]& , 2, Part[$CellContext`weights$, 
+                 First[
+                  
+                  FirstPosition[$CellContext`sites$, #2]]] \
+$CellContext`df$$[#, #2]& ]]; RegionPlot[
+            $CellContext`mf$[{$CellContext`x, $CellContext`y}], \
+{$CellContext`x, -1, 1}, {$CellContext`y, -1, 1}, PlotRange -> 1.02, 
+            PlotPoints -> ControlActive[15, 75], PerformanceGoal -> "Speed", 
+            BoundaryStyle -> Opacity[0], MeshFunctions -> {First[
+               $CellContext`nf$[{#, #2}]]& }, MeshStyle -> Black, 
+            Mesh -> {$CellContext`n$$}, Background -> Darker[Gray, 0.25], 
+            MeshShading -> Map[If[$CellContext`scheme$$ === Hue, 
+               Hue[#], 
+               ColorData[$CellContext`scheme$$][#]]& , 
+              Range[0., 1, 1/($CellContext`n$$ + 1)]], 
+            Epilog -> {$CellContext`points$, 
+              If[$CellContext`type$$ == 0, {}, $CellContext`labels$]}, Frame -> 
+            False, Axes -> False, ImageSize -> {400, 400}]]]), 
+      "Specifications" :> {
+        Style[
+        "Sites", 11, Bold], {{$CellContext`n$$, 6, ""}, {2, 3, 4, 5, 6, 7, 8, 
+         9, 10}, ControlPlacement -> 1}, 
+        Row[{"number", 
+          Manipulate`Place[1], 
+          Spacer[15], 
+          Button[
+          "new set", $CellContext`\[Delta]$$ = $CellContext`\[Delta]$$ + 1, 
+           Background -> RGBColor[0.75, 0.75, 0.75]]}], Delimiter, 
+        Style[
+        "Weights", 11, Bold], {{$CellContext`int$$, {0.2, 0.75}, ""}, 0.01, 1,
+          0.01, ControlType -> IntervalSlider, Method -> "Push", 
+         MinIntervalSize -> 0.001, ImageSize -> 170}, 
+        Dynamic[
+         Item[
+          StringJoin["weight limits: ", 
+           ToString[$CellContext`int$$]]]], 
+        "\nweighing scheme", {{$CellContext`type$$, 1, ""}, {
+         0 -> "unweighted", 1 -> "additive", 2 -> "multiplicative"}}, 
+        Delimiter, 
+        Style["Diagram", 11, Bold], 
+        "distance function", {{$CellContext`df$$, ManhattanDistance, ""}, {
+         EuclideanDistance, ManhattanDistance, ChessboardDistance}, 
+         ControlType -> PopupMenu}, Delimiter, 
+        "color scheme", {{$CellContext`scheme$$, "SunsetColors", ""}, {
+         Hue, "Rainbow", "DarkRainbow", "TemperatureMap", "ThermometerColors",
+           "CMYKColors", "SunsetColors", "GrayYellowTones"}, ControlType -> 
+         PopupMenu}, {{$CellContext`\[Delta]$$, 123}, 0, ControlType -> 
+         None}}, "Options" :> {
+       AutorunSequencing -> {3, 1, 4, 5}, ControlPlacement -> Left, 
+        SynchronousUpdating -> False}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{629., {224., 230.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->1776758049],
+
+Cell[BoxData[
+ TagBox[
+  StyleBox[
+   DynamicModuleBox[{$CellContext`df$$ = 
+    ChessboardDistance, $CellContext`int$$ = {0.41000000000000003`, 
+    0.75}, $CellContext`n$$ = 6, $CellContext`scheme$$ = 
+    "Rainbow", $CellContext`type$$ = 1, $CellContext`\[Delta]$$ = 124, 
+    Typeset`show$$ = True, Typeset`bookmarkList$$ = {}, 
+    Typeset`bookmarkMode$$ = "Menu", Typeset`animator$$, Typeset`animvar$$ = 
+    1, Typeset`name$$ = "\"untitled\"", Typeset`specs$$ = {{
+      Hold[
+       Style["Sites", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`n$$], 6, ""}, {2, 3, 4, 5, 6, 7, 8, 9, 10}}, {
+      Hold[
+       Row[{"number", 
+         Manipulate`Place[1], 
+         Spacer[15], 
+         Button[
+         "new set", $CellContext`\[Delta]$$ = $CellContext`\[Delta]$$ + 1, 
+          Background -> RGBColor[0.75, 0.75, 0.75]]}]], 
+      Manipulate`Dump`ThisIsNotAControl}, {
+      Hold[
+       Style["Weights", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`int$$], {0.41000000000000003`, 0.75}, ""}, 0.01, 1, 
+      0.01}, {
+      Hold[
+       Dynamic[
+        Item[
+         StringJoin["weight limits: ", 
+          ToString[$CellContext`int$$]]]]], 
+      Manipulate`Dump`ThisIsNotAControl}, {
+      Hold["\nweighing scheme"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`type$$], 1, ""}, {
+      0 -> "unweighted", 1 -> "additive", 2 -> "multiplicative"}}, {
+      Hold[
+       Style["Diagram", 11, Bold]], Manipulate`Dump`ThisIsNotAControl}, {
+      Hold["distance function"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`df$$], ChessboardDistance, ""}, {
+      EuclideanDistance, ManhattanDistance, ChessboardDistance}}, {
+      Hold["color scheme"], Manipulate`Dump`ThisIsNotAControl}, {{
+       Hold[$CellContext`scheme$$], "Rainbow", ""}, {
+      Hue, "Rainbow", "DarkRainbow", "TemperatureMap", "ThermometerColors", 
+       "CMYKColors", "SunsetColors", "GrayYellowTones"}}, {{
+       Hold[$CellContext`\[Delta]$$], 124}, 0}}, Typeset`size$$ = {
+    400., {198., 202.}}, Typeset`update$$ = 0, Typeset`initDone$$, 
+    Typeset`skipInitDone$$ = True, $CellContext`n$3546$$ = 
+    0, $CellContext`int$3547$$ = 0, $CellContext`type$3548$$ = 
+    False, $CellContext`df$3549$$ = 0, $CellContext`scheme$3550$$ = 0}, 
+    DynamicBox[Manipulate`ManipulateBoxes[
+     3, StandardForm, 
+      "Variables" :> {$CellContext`df$$ = 
+        ChessboardDistance, $CellContext`int$$ = {0.41000000000000003`, 
+         0.75}, $CellContext`n$$ = 6, $CellContext`scheme$$ = 
+        "Rainbow", $CellContext`type$$ = 1, $CellContext`\[Delta]$$ = 124}, 
+      "ControllerVariables" :> {
+        Hold[$CellContext`n$$, $CellContext`n$3546$$, 0], 
+        Hold[$CellContext`int$$, $CellContext`int$3547$$, 0], 
+        Hold[$CellContext`type$$, $CellContext`type$3548$$, False], 
+        Hold[$CellContext`df$$, $CellContext`df$3549$$, 0], 
+        Hold[$CellContext`scheme$$, $CellContext`scheme$3550$$, 0]}, 
+      "OtherVariables" :> {
+       Typeset`show$$, Typeset`bookmarkList$$, Typeset`bookmarkMode$$, 
+        Typeset`animator$$, Typeset`animvar$$, Typeset`name$$, 
+        Typeset`specs$$, Typeset`size$$, Typeset`update$$, Typeset`initDone$$,
+         Typeset`skipInitDone$$}, 
+      "Body" :> (SeedRandom[$CellContext`\[Delta]$$]; Quiet[
+         Module[{$CellContext`reg$, $CellContext`sites$, \
+$CellContext`points$, $CellContext`weights$, $CellContext`labels$, \
+$CellContext`mf$, $CellContext`nf$}, $CellContext`reg$ = 
+           Rectangle[{-1, -1}, {1, 1}]; $CellContext`sites$ = 
+           RandomPoint[$CellContext`reg$, $CellContext`n$$]; \
+$CellContext`points$ = {
+             PointSize[0.015], 
+             ParallelMap[Point, $CellContext`sites$]}; $CellContext`weights$ = 
+           Round[
+             RandomReal[$CellContext`int$$, $CellContext`n$$], 
+             0.01]; $CellContext`labels$ = ParallelTable[
+             Text[
+              ToString[
+               Part[$CellContext`weights$, $CellContext`i]], 
+              Part[$CellContext`sites$, $CellContext`i] + {0, 0.02}, {0, -1}, 
+              Background -> White], {$CellContext`i, 
+              1, $CellContext`n$$}]; $CellContext`mf$ = 
+           RegionMember[$CellContext`reg$]; $CellContext`nf$ = 
+           Nearest[$CellContext`sites$ -> Automatic, DistanceFunction -> 
+             Switch[$CellContext`type$$, 0, $CellContext`df$$[#, #2]& , 
+               1, -Part[$CellContext`weights$, 
+                  First[
+                   
+                   FirstPosition[$CellContext`sites$, #2]]] + \
+$CellContext`df$$[#, #2]& , 2, Part[$CellContext`weights$, 
+                 First[
+                  
+                  FirstPosition[$CellContext`sites$, #2]]] \
+$CellContext`df$$[#, #2]& ]]; RegionPlot[
+            $CellContext`mf$[{$CellContext`x, $CellContext`y}], \
+{$CellContext`x, -1, 1}, {$CellContext`y, -1, 1}, PlotRange -> 1.02, 
+            PlotPoints -> ControlActive[15, 75], PerformanceGoal -> "Speed", 
+            BoundaryStyle -> Opacity[0], MeshFunctions -> {First[
+               $CellContext`nf$[{#, #2}]]& }, MeshStyle -> Black, 
+            Mesh -> {$CellContext`n$$}, Background -> Darker[Gray, 0.25], 
+            MeshShading -> Map[If[$CellContext`scheme$$ === Hue, 
+               Hue[#], 
+               ColorData[$CellContext`scheme$$][#]]& , 
+              Range[0., 1, 1/($CellContext`n$$ + 1)]], 
+            Epilog -> {$CellContext`points$, 
+              If[$CellContext`type$$ == 0, {}, $CellContext`labels$]}, Frame -> 
+            False, Axes -> False, ImageSize -> {400, 400}]]]), 
+      "Specifications" :> {
+        Style[
+        "Sites", 11, Bold], {{$CellContext`n$$, 6, ""}, {2, 3, 4, 5, 6, 7, 8, 
+         9, 10}, ControlPlacement -> 1}, 
+        Row[{"number", 
+          Manipulate`Place[1], 
+          Spacer[15], 
+          Button[
+          "new set", $CellContext`\[Delta]$$ = $CellContext`\[Delta]$$ + 1, 
+           Background -> RGBColor[0.75, 0.75, 0.75]]}], Delimiter, 
+        Style[
+        "Weights", 11, 
+         Bold], {{$CellContext`int$$, {0.41000000000000003`, 0.75}, ""}, 0.01,
+          1, 0.01, ControlType -> IntervalSlider, Method -> "Push", 
+         MinIntervalSize -> 0.001, ImageSize -> 170}, 
+        Dynamic[
+         Item[
+          StringJoin["weight limits: ", 
+           ToString[$CellContext`int$$]]]], 
+        "\nweighing scheme", {{$CellContext`type$$, 1, ""}, {
+         0 -> "unweighted", 1 -> "additive", 2 -> "multiplicative"}}, 
+        Delimiter, 
+        Style["Diagram", 11, Bold], 
+        "distance function", {{$CellContext`df$$, ChessboardDistance, ""}, {
+         EuclideanDistance, ManhattanDistance, ChessboardDistance}, 
+         ControlType -> PopupMenu}, Delimiter, 
+        "color scheme", {{$CellContext`scheme$$, "Rainbow", ""}, {
+         Hue, "Rainbow", "DarkRainbow", "TemperatureMap", "ThermometerColors",
+           "CMYKColors", "SunsetColors", "GrayYellowTones"}, ControlType -> 
+         PopupMenu}, {{$CellContext`\[Delta]$$, 124}, 0, ControlType -> 
+         None}}, "Options" :> {
+       AutorunSequencing -> {3, 1, 4, 5}, ControlPlacement -> Left, 
+        SynchronousUpdating -> False}, 
+      "DefaultOptions" :> {ControllerLinking -> True}],
+     ImageSizeCache->{629., {224., 230.}},
+     SingleEvaluation->True],
+    Deinitialization:>None,
+    DynamicModuleValues:>{},
+    SynchronousInitialization->True,
+    UndoTrackedVariables:>{Typeset`show$$, Typeset`bookmarkMode$$},
+    UnsavedVariables:>{Typeset`initDone$$},
+    UntrackedVariables:>{Typeset`size$$}], "Manipulate",
+   Deployed->True,
+   StripOnInput->False],
+  Manipulate`InterpretManipulate[1]]], "Output",
+ CellID->1212418008]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "DetailsSection"],
+
+Cell["References", "DetailNotes",
+ CellChangeTimes->{{3.6800042634093866`*^9, 3.680004270833726*^9}},
+ CellID->8492406],
+
+Cell[TextData[{
+ "[1] A. Dobrin. \"A Review of Properties and Variations of Voronoi Diagrams.\
+\" Whitman College, Senior Project Archive, 2005. (Aug 16, 2016) ",
+ ButtonBox["www.whitman.edu/Documents/Academics/Mathematics/dobrinat.pdf",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["https://www.whitman.edu/Documents/Academics/Mathematics/dobrinat.\
+pdf"], None},
+  ButtonNote->
+   "https://www.whitman.edu/Documents/Academics/Mathematics/dobrinat.pdf"],
+ "."
+}], "DetailNotes",
+ CellChangeTimes->{{3.6786959414684877`*^9, 3.678696068181847*^9}, {
+  3.678696098995534*^9, 3.678696129146055*^9}, {3.678696495289815*^9, 
+  3.678696500566366*^9}, {3.6786999477944927`*^9, 3.6786999515291557`*^9}, {
+  3.68034596823934*^9, 3.680345977589045*^9}, {3.68036110681021*^9, 
+  3.6803611421669197`*^9}, {3.68036118625835*^9, 3.6803612029737663`*^9}, {
+  3.6803614034084673`*^9, 3.680361418863007*^9}},
+ CellID->670820386],
+
+Cell[TextData[{
+ "[2] R. Devulapalli. \"Dynamic Data Visualization using Weighted Voronoi \
+Diagrams.\" University of Minnesota. (Aug 16, 2016) ",
+ ButtonBox["www.tc.umn.edu/~devul002/internetmap.html",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://www.tc.umn.edu/~devul002/internetmap.html"], None},
+  ButtonNote->"http://www.tc.umn.edu/~devul002/internetmap.html"],
+ "."
+}], "DetailNotes",
+ CellChangeTimes->{{3.678700653721098*^9, 3.678700676460931*^9}, {
+  3.678700712055471*^9, 3.678700745187971*^9}, {3.678700808456698*^9, 
+  3.678700808458197*^9}, {3.680345971541274*^9, 3.680345971957294*^9}, {
+  3.680361333274304*^9, 3.680361378846243*^9}, {3.6803614287098722`*^9, 
+  3.680361436188184*^9}},
+ CellID->1912029086]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "ControlSuggestionsSection"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[True], Cell[" Resize Images"]}],
+  "\"Click inside an image to reveal its orange resize frame.\\nDrag any of \
+the orange resize handles to resize the image.\"",
+  TooltipDelay->0.35]], "ControlSuggestions",
+ CellChangeTimes->{3.679399056632484*^9},
+ FontFamily->"Verdana",
+ CellTags->"ResizeImages"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[False], Cell[" Rotate and Zoom in 3D"]}],
+  RowBox[{
+   "\"Drag a 3D graphic to rotate it. Starting the drag near the center \
+tumbles\\nthe graphic; starting near a corner turns it parallel to the plane \
+of the screen.\\nHold down \"", 
+    FrameBox[
+    "Ctrl", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" (or \"", 
+    FrameBox[
+    "Cmd", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" on Mac) and drag up and down to zoom.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ FontFamily->"Verdana",
+ CellTags->"RotateAndZoomIn3D"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[False], Cell[" Drag Locators"]}],
+  RowBox[{"\"Drag any locator (\"", 
+    GraphicsBox[
+     LocatorBox[
+      Scaled[{0.5, 0.5}]], ImageSize -> 20], 
+    "\", etc.) to move it around.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ FontFamily->"Verdana",
+ CellTags->"DragLocators"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[False], Cell[" Create and Delete Locators"]}],
+  RowBox[{"\"Insert a new locator in the graphic by holding down the \"", 
+    FrameBox[
+    "Alt", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], 
+    "\" key\\nand clicking where you want it to be. Delete a locator by \
+clicking it\\nwhile holding down the \"", 
+    FrameBox[
+    "Alt", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" key.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ FontFamily->"Verdana",
+ CellTags->"CreateAndDeleteLocators"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[True], Cell[" Slider Zoom"]}],
+  RowBox[{"\"Hold down the \"", 
+    FrameBox[
+    "Alt", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], 
+    "\" key while moving a slider to make fine adjustments in the slider \
+value.\\nHold \"", 
+    FrameBox[
+    "Ctrl", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" and/or \"", 
+    FrameBox[
+    "Shift", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" at the same time as \"", 
+    FrameBox[
+    "Alt", Background -> GrayLevel[0.9], FrameMargins -> 2, FrameStyle -> 
+     GrayLevel[0.9]], "\" to make ever finer adjustments.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ CellChangeTimes->{3.6793990602155*^9},
+ FontFamily->"Verdana",
+ CellTags->"SliderZoom"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[True], Cell[" Gamepad Controls"]}],
+  "\"Control this Demonstration with a gamepad or other\\nhuman interface \
+device connected to your computer.\"",
+  TooltipDelay->0.35]], "ControlSuggestions",
+ CellChangeTimes->{3.35696210375764*^9, 3.3895522232313623`*^9, 
+  3.6803459911226482`*^9},
+ FontFamily->"Verdana",
+ CellTags->"GamepadControls"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[True], Cell[" Automatic Animation"]}],
+  RowBox[{"\"Animate a slider in this Demonstration by clicking the\"", 
+    AdjustmentBox[
+     Cell[
+      GraphicsData[
+      "CompressedBitmap", 
+       "eJzzTSzJSM1NLMlMTlRwL0osyMhMLlZwyy8CCjEzMjAwcIKwAgOI/R/IhBKc\n\
+/4EAyGAG0f+nTZsGwgysIJIRKsWKLAXGIHFmEpUgLADxWUAkI24jZs+eTaEt\n\
+IG+wQKRmzJgBlYf5lhEA30OqWA=="], "Graphics", ImageSize -> {9, 9}, ImageMargins -> 
+      0, CellBaseline -> Baseline], BoxBaselineShift -> 0.1839080459770115, 
+     BoxMargins -> {{0., 0.}, {-0.1839080459770115, 0.1839080459770115}}], 
+    "\"button\\nnext to the slider, and then clicking the play button that \
+appears.\\nAnimate all controls by selecting \"", 
+    StyleBox["Autorun", FontWeight -> "Bold"], "\" from the\"", 
+    AdjustmentBox[
+     Cell[
+      GraphicsData[
+      "CompressedBitmap", 
+       "eJyNULENwyAQfEySIlMwTVJlCGRFsosokeNtqBmDBagoaZjAI1C8/8GUUUC6\n\
+57h7cQ8PvU7Pl17nUav7oj/TPH7V7b2QJAUAXBkKmCPRowxICy64bRvGGNF7\n\
+X8CctGoDSN4xhIDGGDhzFXwUh3/ClBKrDQPmnGXtI6u0OOd+tZBVUqy1xSaH\n\
+UqiK6pPe4XdEdAz6563tx/gejuORGMxJaz8mdpJn7hc="], "Graphics", 
+      ImageSize -> {10, 10}, ImageMargins -> 0, CellBaseline -> Baseline], 
+     BoxBaselineShift -> 0.1839080459770115, 
+     BoxMargins -> {{0., 0.}, {-0.1839080459770115, 0.1839080459770115}}], 
+    "\"menu.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ CellChangeTimes->{3.679399062092895*^9},
+ FontFamily->"Verdana",
+ CellTags->"AutomaticAnimation"],
+
+Cell[BoxData[
+ TooltipBox[
+  RowBox[{
+   CheckboxBox[False], Cell[" Bookmark Animation"]}],
+  RowBox[{
+   "\"See a prepared animation of this Demonstration by selecting\\n\"", 
+    StyleBox["Animate Bookmarks", FontWeight -> "Bold"], "\" from the\"", 
+    AdjustmentBox[
+     Cell[
+      GraphicsData[
+      "CompressedBitmap", 
+       "eJyNULENwyAQfEySIlMwTVJlCGRFsosokeNtqBmDBagoaZjAI1C8/8GUUUC6\n\
+57h7cQ8PvU7Pl17nUav7oj/TPH7V7b2QJAUAXBkKmCPRowxICy64bRvGGNF7\n\
+X8CctGoDSN4xhIDGGDhzFXwUh3/ClBKrDQPmnGXtI6u0OOd+tZBVUqy1xSaH\n\
+UqiK6pPe4XdEdAz6563tx/gejuORGMxJaz8mdpJn7hc="], "Graphics", 
+      ImageSize -> {10, 10}, ImageMargins -> 0, CellBaseline -> Baseline], 
+     BoxBaselineShift -> 0.1839080459770115, 
+     BoxMargins -> {{0., 0.}, {-0.1839080459770115, 0.1839080459770115}}], 
+    "\"menu.\""}],
+  TooltipDelay->0.35]], "ControlSuggestions",
+ FontFamily->"Verdana",
+ CellTags->"BookmarkAnimation"]
+}, Open  ]],
+
+Cell["", "SearchTermsSection"],
+
+Cell[CellGroupData[{
+
+Cell["", "RelatedLinksSection"],
+
+Cell[TextData[ButtonBox["Voronoi Diagram",
+ BaseStyle->"Hyperlink",
+ ButtonData->{
+   URL["http://mathworld.wolfram.com/VoronoiDiagram.html"], None},
+ ButtonNote->
+  "http://mathworld.wolfram.com/VoronoiDiagram.html"]], "RelatedLinks",
+ CellChangeTimes->{{3.679982149897455*^9, 3.6799821498993073`*^9}},
+ CellID->139591314]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["", "AuthorSection"],
+
+Cell[TextData[{
+ "Contributed by: ",
+ ButtonBox["Erik Mahieu",
+  BaseStyle->"Hyperlink",
+  ButtonData->{
+    URL["http://demonstrations.wolfram.com/author.html?author=Erik+Mahieu"], 
+    None},
+  ButtonNote->
+   "http://demonstrations.wolfram.com/author.html?author=Erik+Mahieu"]
+}], "Author",
+ CellChangeTimes->{{3.6786850622896976`*^9, 3.67868506551863*^9}}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{892, 722},
+WindowMargins->{{277, Automatic}, {Automatic, 62}},
+FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 29, \
+2015)",
+StyleDefinitions->FrontEnd`FileName[{"Wolfram"}, "Demonstration.nb", 
+  CharacterEncoding -> "UTF-8"]
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{
+ "AutomaticAnimation"->{
+  Cell[62304, 1360, 1505, 32, 29, "ControlSuggestions",
+   CellTags->"AutomaticAnimation"]},
+ "BookmarkAnimation"->{
+  Cell[63812, 1394, 908, 21, 29, "ControlSuggestions",
+   CellTags->"BookmarkAnimation"]},
+ "CreateAndDeleteLocators"->{
+  Cell[60380, 1307, 637, 15, 29, "ControlSuggestions",
+   CellTags->"CreateAndDeleteLocators"]},
+ "DragLocators"->{
+  Cell[60037, 1294, 340, 11, 29, "ControlSuggestions",
+   CellTags->"DragLocators"]},
+ "GamepadControls"->{
+  Cell[61906, 1348, 395, 10, 29, "ControlSuggestions",
+   CellTags->"GamepadControls"]},
+ "ResizeImages"->{
+  Cell[59000, 1265, 353, 9, 29, "ControlSuggestions",
+   CellTags->"ResizeImages"]},
+ "RotateAndZoomIn3D"->{
+  Cell[59356, 1276, 678, 16, 29, "ControlSuggestions",
+   CellTags->"RotateAndZoomIn3D"]},
+ "SliderZoom"->{
+  Cell[61020, 1324, 883, 22, 29, "ControlSuggestions",
+   CellTags->"SliderZoom"]}
+ }
+*)
+(*CellTagsIndex
+CellTagsIndex->{
+ {"AutomaticAnimation", 65986, 1464},
+ {"BookmarkAnimation", 66103, 1467},
+ {"CreateAndDeleteLocators", 66224, 1470},
+ {"DragLocators", 66340, 1473},
+ {"GamepadControls", 66448, 1476},
+ {"ResizeImages", 66556, 1479},
+ {"RotateAndZoomIn3D", 66665, 1482},
+ {"SliderZoom", 66773, 1485}
+ }
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[585, 22, 112, 1, 76, "DemoTitle"],
+Cell[700, 25, 33, 0, 275, "InitializationSection"],
+Cell[CellGroupData[{
+Cell[758, 29, 29, 0, 201, "ManipulateSection"],
+Cell[CellGroupData[{
+Cell[812, 33, 13593, 315, 616, "Input"],
+Cell[14408, 350, 7607, 150, 466, "Output",
+ CellID->592904647]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[22064, 506, 36, 0, 181, "ManipulateCaptionSection"],
+Cell[22103, 508, 359, 7, 39, "ManipulateCaption",
+ CellID->1333102113],
+Cell[22465, 517, 733, 12, 39, "ManipulateCaption",
+ CellID->1866972353],
+Cell[23201, 531, 597, 10, 23, "ManipulateCaption",
+ CellID->2125056437],
+Cell[23801, 543, 686, 11, 39, "ManipulateCaption",
+ CellID->2109037058],
+Cell[24490, 556, 674, 11, 39, "ManipulateCaption",
+ CellID->1058414107],
+Cell[25167, 569, 695, 11, 23, "ManipulateCaption",
+ CellID->720488007],
+Cell[25865, 582, 547, 9, 39, "ManipulateCaption",
+ CellID->23125692]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[26449, 596, 28, 0, 179, "ThumbnailSection"],
+Cell[26480, 598, 7611, 150, 466, "Output",
+ CellID->624280049]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[34128, 753, 28, 0, 149, "SnapshotsSection"],
+Cell[34159, 755, 7584, 150, 466, "Output",
+ CellID->1817167948],
+Cell[41746, 907, 7628, 150, 466, "Output",
+ CellID->1776758049],
+Cell[49377, 1059, 7705, 153, 466, "Output",
+ CellID->1212418008]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[57119, 1217, 26, 0, 357, "DetailsSection"],
+Cell[57148, 1219, 119, 2, 23, "DetailNotes",
+ CellID->8492406],
+Cell[57270, 1223, 916, 18, 39, "DetailNotes",
+ CellID->670820386],
+Cell[58189, 1243, 734, 15, 39, "DetailNotes",
+ CellID->1912029086]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[58960, 1263, 37, 0, 131, "ControlSuggestionsSection"],
+Cell[59000, 1265, 353, 9, 29, "ControlSuggestions",
+ CellTags->"ResizeImages"],
+Cell[59356, 1276, 678, 16, 29, "ControlSuggestions",
+ CellTags->"RotateAndZoomIn3D"],
+Cell[60037, 1294, 340, 11, 29, "ControlSuggestions",
+ CellTags->"DragLocators"],
+Cell[60380, 1307, 637, 15, 29, "ControlSuggestions",
+ CellTags->"CreateAndDeleteLocators"],
+Cell[61020, 1324, 883, 22, 29, "ControlSuggestions",
+ CellTags->"SliderZoom"],
+Cell[61906, 1348, 395, 10, 29, "ControlSuggestions",
+ CellTags->"GamepadControls"],
+Cell[62304, 1360, 1505, 32, 29, "ControlSuggestions",
+ CellTags->"AutomaticAnimation"],
+Cell[63812, 1394, 908, 21, 29, "ControlSuggestions",
+ CellTags->"BookmarkAnimation"]
+}, Open  ]],
+Cell[64735, 1418, 30, 0, 165, "SearchTermsSection"],
+Cell[CellGroupData[{
+Cell[64790, 1422, 31, 0, 137, "RelatedLinksSection"],
+Cell[64824, 1424, 323, 7, 23, "RelatedLinks",
+ CellID->139591314]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[65184, 1436, 25, 0, 149, "AuthorSection"],
+Cell[65212, 1438, 360, 10, 23, "Author"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
